@@ -1,0 +1,36 @@
+.layerView {
+    position: absolute;
+    right: 0;
+    top: 35px;
+    width: 260px;
+    height: 300px;
+    background: #F7F7F7;
+    overflow: hidden;
+    font-size: 12.5px;
+}
+
+.layerRow {
+    fill: #F7F7F7;
+    cursor: pointer;
+}
+
+.layerRow:hover {
+    fill: white;
+}
+
+.layerSelected {
+    fill: white;
+}
+
+.layerIcon {
+    width: 15px;
+    height: 15px;
+    pointer-events: none;
+}
+
+.layerText {
+    text-anchor: start;
+    dominant-baseline: text-before-edge;
+    alignment-baseline: text-before-edge;
+    pointer-events: none; 
+}

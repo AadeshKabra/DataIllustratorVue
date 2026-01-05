@@ -1,0 +1,178 @@
+.myToolBar {
+    height: 35px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #F7F7F7;
+    padding: 6px 0 5px 0;
+    margin: 0;
+    box-shadow: 1px 1px #ddd;
+    font-size:12.5px;
+}
+
+.iconBtn {
+    background-repeat: no-repeat;
+    background-color: transparent;
+    background-size: 24px 24px;
+    border: solid 0px #ddd;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    margin: 0px 6px 0px 6px;
+    padding: 0;
+    outline: none;
+    background-position: 0% 0%;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align:middle
+}
+
+.myTextBtn {
+    background-color: transparent;
+    border: solid 0px #eee;
+    outline: none;
+    text-align: center;
+    margin: 0px 5px 0px 5px;
+    padding: 0 5px 0 5px;
+    /* width: 60px; */
+    height: 24px;
+    display: inline-block;
+    /* color: black; */
+    text-decoration: none;
+    /* cursor: pointer; */
+    vertical-align:middle
+}
+
+/* .myTextBtn:hover {
+    border: solid 0px #ddd;
+    background-color: #eee;
+} */
+
+.myBtnGroup {
+    display: inline-block;
+    border-left: 2px dotted #ccc;
+    height: auto;
+    padding: 0 5px 0 5px;
+}
+
+#SelectBtn {
+    background-image: url(../assets/DI_Select_Dft_2x.png);
+}
+
+#SelectBtn.active {
+    background-image: url(../assets/DI_Select_Active_2x.png);
+}
+
+#DirectSelectBtn {
+    background-image: url(../assets/DI_Direct_Select_Dft_2x.png);
+}
+
+#DirectSelectBtn.active {
+    background-image: url(../assets/DI_Direct_Select_Active_2x.png);
+}
+
+#LineBtn {
+    background-image: url(../assets/DI_Line_Dft_2x.png);
+}
+
+#LineBtn.active {
+    background-image: url(../assets/DI_Line_Active_2x.png);
+}
+
+#RectBtn {
+    background-image: url(../assets/DI_Rect_Dft_2x.png);
+}
+
+#RectBtn.active {
+    background-image: url(../assets/DI_Rect_Active_2x.png);
+}
+
+#EllipseBtn {
+    background-image: url(../assets/DI_Ellipse_Dft_2x.png);
+}
+
+#EllipseBtn.active {
+    background-image: url(../assets/DI_Ellipse_Active_2x.png);
+}
+
+#RingBtn {
+    background-image: url(../assets/DI_Ring_Dft_2x.png);
+}
+
+#RingBtn.active {
+    background-image: url(../assets/DI_Ring_Active_2x.png);
+}
+
+#PenBtn {
+    background-image: url(../assets/DI_Pen_Dft_2x.png);
+}
+
+#PenBtn.active {
+    background-image: url(../assets/DI_Pen_Active_2x.png);
+}
+
+#TextBtn {
+    background-image: url(../assets/DI_Text_Dft_2x.png);
+}
+
+#TextBtn.active {
+    background-image: url(../assets/DI_Text_Active_2x.png);
+}
+
+#AlignTopBtn {
+    background-image: url(../assets/DI_AlignTop.png);
+}
+
+#AlignMiddleBtn {
+    background-image: url(../assets/DI_AlignMiddle.png);
+}
+
+#AlignBottomBtn {
+    background-image: url(../assets/DI_AlignBottom.png);
+    margin-right: 15px;
+}
+
+#AlignLeftBtn {
+    background-image: url(../assets/DI_AlignLeft.png);
+}
+
+#AlignCenterBtn {
+    background-image: url(../assets/DI_AlignCenter.png);
+}
+
+#AlignRightBtn {
+    background-image: url(../assets/DI_AlignRight.png);
+}
+
+.alignBtn {
+    background-repeat: no-repeat;
+    background-color: transparent;
+    background-size: 16px 16px;
+    border: solid 0px #ddd;
+    width: 16px;
+    height: 16px;
+    text-align: center;
+    margin: 0px 6px 0px 6px;
+    padding: 0;
+    outline: none;
+    background-position: 0% 0%;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align:middle;
+    opacity: 1;
+}
+
+.alignBtn:disabled,
+.alignBtn[disabled]{
+    opacity: 0.35;
+    cursor: default;
+}
+
+.modal-backdrop {
+    background-color: #aaa;
+  }
+
+
+
+

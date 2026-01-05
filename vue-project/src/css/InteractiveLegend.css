@@ -1,0 +1,6 @@
+#legendColorPicker {
+    position: absolute;
+    bottom: 0;
+    right: 20px;
+    visibility: hidden;
+}

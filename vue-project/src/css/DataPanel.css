@@ -1,0 +1,79 @@
+#dataPanel {
+    position: absolute;
+    left: 1px;
+    right: 261px;
+    height: 200px;
+    background: #F7F7F7;
+    bottom: 0px;
+    font-size: 12.5px;
+}
+
+#datasetInfo {
+    border-bottom: 1px solid #ccc;
+    min-height: 35px;
+}
+
+#dataScopeInfo {
+    min-height: 20px;
+    margin: 2px 0px 2px 5px;
+
+}
+
+#csvBtn {
+    position: absolute;
+    right: 5px;
+    top: 5px; 
+    outline: none;
+    background-color: #fff;
+}
+
+.tableTab {
+    display: inline-block;
+    padding: 8px 15px 8px 15px;
+    font-weight: bold;
+    color: #666;
+    cursor: pointer;
+}
+
+.activeTableTab {
+    display: inline-block;
+    padding: 8px 15px 8px 15px;
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+    background: white;
+    border: 1px solid #ccc;
+    border-bottom: 0px;
+}
+
+#tableDiv {
+    overflow-y: scroll;
+    background: white;
+    height: 167.5px;
+}
+
+#dataTable {
+    width: 100%;
+    border-spacing: 0;
+}
+
+#dataTable > thead {
+    background: #eee;
+}
+
+#dataTable > thead > tr > th {
+    padding: 5px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+#dataTable > tbody {
+    background: white;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#dataTable > tbody > tr >td {
+    text-align: center;
+    border: 0.5px solid #eee;
+}

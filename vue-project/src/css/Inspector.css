@@ -1,0 +1,304 @@
+:root {
+    --control-width: 110px;
+    --prop-slider-thumb-size: 7px; 
+}
+
+.scaleMenu {
+    width: 280px;
+    font-size:13.5px;
+}
+
+.scaleMenuLabel {
+    width: 180px;
+    text-align: right;
+    margin-top: 7px;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.scaleBtnDiv {
+    position:absolute;
+    left: 104px;
+    margin-top: 1px;
+    outline: none;
+}
+
+.scaleBtn {
+    width: 19px;
+    height: 19px;
+    background-size: 19px 19px;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    background-position: center 0px;
+    outline: none;
+    border: solid 0px #ddd;
+    cursor: pointer;
+    vertical-align: middle;
+    background-image: url(../assets/DI_ScaleSetting.png);
+}
+
+.encodeBtn {
+    width: 14px;
+    height: 14px;
+    background-size: 14px 14px;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    background-position: center 0px;
+    outline: none;
+    border: solid 0px #ddd;
+    cursor: pointer;
+    vertical-align: middle;
+    margin-bottom: 2px;
+    margin-left:6px;
+    background-image: url(../assets/DI_Bind.png);
+}
+
+.encodeBtn:focus {
+    outline: none;
+}
+
+/* .encodeBtn.isBound {
+    background-image: url(../assets/DI_Unbind.png);
+} */
+
+.unencodeBtn {
+    width: 14px;
+    height: 14px;
+    background-size: 14px 14px;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    background-position: center 0px;
+    outline: none;
+    border: solid 0px #ddd;
+    cursor: pointer;
+    vertical-align: middle;
+    margin-bottom: 2px;
+    margin-left:5px;
+    background-image: url(../assets/DI_Unbind.png);
+}
+
+.orderDirBtn {
+    width: 18px;
+    height: 18px;
+    outline: none;
+    border: solid 0px #ddd;
+    cursor: pointer;
+    vertical-align: middle;
+    margin-bottom: 2px;
+    margin-left:5px;
+}
+
+.encodeFields {
+    font-size: 12.5px;
+}
+
+.propertyGroupHeader {
+    display: inline-block;
+    font-weight: bold;
+    margin: 10px 0 5px 20px;
+    font-size: 12.5px;
+}
+
+.propertyRow {
+    vertical-align: middle;
+    width: 100%;
+}
+
+.propertyName {
+    width:100px;
+    font-size: 12.5px;
+    text-align: right;
+    padding-right:8px;
+}
+
+.propertyInput {
+    max-width: var(--control-width);
+    width: var(--control-width);
+    padding: 3px;
+}
+
+.propertyInput > input {
+    width: var(--control-width);
+    border: solid 1px #ccc;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.propertyInput > input:focus {
+    outline: solid 1px #7cc6f2;
+}
+
+.propertyInput > input[type=checkbox] {
+    width: 16px;
+    padding: 3px;
+}
+
+.propertyInput > input[type=checkbox]:focus {
+    outline: solid 0px #7cc6f2;
+}
+
+.propertyInput > input:disabled {
+    background: #ddd;
+    color: #333;
+}
+
+.propertyInput > select {
+    width: var(--control-width);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    height:22px;
+}
+
+
+.propertySliderDiv {
+    display: inline-block;
+}
+
+
+/* .rightPanel {
+    position: absolute;
+    right: 0;
+    top: 0px;
+    padding-top: 40px;
+    width: 260px;
+    height: 100%;
+    background: #F7F7F7;
+    overflow: hidden;
+    font-size: 12.5px;
+} */
+
+.propertyPanel {
+    position: absolute;
+    right: 0;
+    top: 335px;
+    padding-top: 10px;
+    width: 260px;
+    height: 100%;
+    background: #F7F7F7;
+    overflow-y: hidden;
+    overflow-x: visible;
+    font-size: 12.5px;
+    border-top: 1px solid #aaa;
+
+}
+
+.propertySliderMarks {
+    margin: -10px 0 0 0;
+    width: 110px;
+    height: 20px;
+    color: #333;
+    font-size: 9px;
+}
+
+input[type=range].propertySlider {
+    height: 17px;
+    -webkit-appearance: none;
+    margin-bottom: 0px;
+    width:var(--control-width);
+    background: none;
+}
+  
+input[type=range].propertySlider:focus {
+    outline: none;
+}
+
+input[type=range].propertySlider::-webkit-slider-runnable-track {
+    width:var(--control-width);
+    height: 3px;
+    cursor: pointer;
+    /* animate: 0.2s; */
+    box-shadow: 0px 0px 0px #000000;
+    background: #DDDDDD;
+    border-radius: 1px;
+    border: 0px solid #000000;
+}
+
+input[type=range].propertySlider::-webkit-slider-thumb {
+    box-shadow: 0px 0px 1px #000000;
+    border: 1px solid #2497E3;
+    height: var(--prop-slider-thumb-size);
+    width: var(--prop-slider-thumb-size);
+    border-radius: 8px;
+    background: #A1D0FF;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -4px;
+}
+  
+input[type=range].propertySlider:focus::-webkit-slider-runnable-track {
+    background: #DDDDDD;
+}
+
+input[type=range].propertySlider::-moz-range-track {
+    width:var(--control-width);
+    height: 3px;
+    cursor: pointer;
+    /* animate: 0.2s; */
+    box-shadow: 0px 0px 0px #000000;
+    background: #DDDDDD;
+    border-radius: 1px;
+    border: 0px solid #000000;
+}
+
+input[type=range].propertySlider::-moz-range-thumb {
+    box-shadow: 0px 0px 1px #000000;
+    border: 1px solid #2497E3;
+    height: var(--prop-slider-thumb-size);
+    width: var(--prop-slider-thumb-size);
+    border-radius: 8px;
+    background: #A1D0FF;
+    cursor: pointer;
+}
+
+input[type=range].propertySlider::-ms-track {
+    width:var(--control-width);
+    height: 3px;
+    cursor: pointer;
+    /* animate: 0.2s; */
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+}
+
+input[type=range].propertySlider::-ms-fill-lower {
+    background: #DDDDDD;
+    border: 0px solid #000000;
+    border-radius: 2px;
+    box-shadow: 0px 0px 0px #000000;
+}
+  
+input[type=range].propertySlider::-ms-fill-upper {
+    background: #DDDDDD;
+    border: 0px solid #000000;
+    border-radius: 2px;
+    box-shadow: 0px 0px 0px #000000;
+}
+
+input[type=range].propertySlider::-ms-thumb {
+    margin-top: 1px;
+    box-shadow: 0px 0px 1px #000000;
+    border: 1px solid #2497E3;
+    height: var(--prop-slider-thumb-size);
+    width: var(--prop-slider-thumb-size);
+    border-radius: 8px;
+    background: #A1D0FF;
+    cursor: pointer;
+}
+
+input[type=range].propertySlider:focus::-ms-fill-lower {
+    background: #DDDDDD;
+}
+
+input[type=range].propertySlider:focus::-ms-fill-upper {
+    background: #DDDDDD;
+}
+
+#colorPicker {
+    position: absolute;
+    bottom: 0;
+    right: 20px;
+    display: none;
+}
+  
