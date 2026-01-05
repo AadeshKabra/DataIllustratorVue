@@ -1,30 +1,51 @@
 <template>
-  <div class="button-panel">
-    <button @click="importData" class="import-button">Import Data</button>
+
+  <div class="main-layout">
+    <div class="data-section">
+
+      <div class="button-panel">
+        <button @click="importData" class="import-button">Import Data</button>
+      </div>
+
+
+      <input type="file" ref="fileInput" accept=".csv" @change="handleFileSelect" style="display: none" />
+
+      <div v-if="rows.length > 0" class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th v-for="(header, index) in headers" :key="index">
+                {{ header }}
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr v-for="(row, rowIndex) in rows" :key="rowIndex">
+              <td v-for="(cell, cellIndex) in row" :key="cellIndex">
+                {{ cell }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+
+    <div class="side-panels">
+      <div class="layers-section">
+        Layers
+      </div>
+
+
+      <div class="canvas-section">
+        Canvas
+      </div>
+    </div>
   </div>
 
 
-  <input type="file" ref="fileInput" accept=".csv" @change="handleFileSelect" style="display: none" />
-
-  <div v-if="rows.length > 0" class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th v-for="(header, index) in headers" :key="index">
-            {{ header }}
-          </th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr v-for="(row, rowIndex) in rows" :key="rowIndex">
-          <td v-for="(cell, cellIndex) in row" :key="cellIndex">
-            {{ cell }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
 </template>
 
 <script setup>
@@ -67,6 +88,29 @@ function head(n = previousRows.value) {
 </script>
 
 <style scoped>
+.main-layout{
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+.data-section {
+  flex: 1;
+  position: relative;
+}
+
+.button-panel{
+  background-color: #f5f5f5;
+  padding: 10px;
+  position: absolute;
+  bottom: 230px;
+  /* width: 100%; */
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .panel-bar {
   display: flex;
   justify-content: flex-end;
@@ -86,7 +130,7 @@ function head(n = previousRows.value) {
   overflow-y: auto;
   overflow-x: auto;
   border: 1px solid black;
-  position: fixed;
+  position: absolute;
   bottom: 0;
   right: 0;
   left: 0;
@@ -106,5 +150,27 @@ td,
 th {
   border: 1px solid black;
   padding: 5px;
+}
+
+
+.side-panels {
+  width: 200px;
+  flex: 0 0 200px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #ddd;
+}
+
+.layers-section {
+  flex: 2 1 0;
+  /* 2 parts */
+  border: 2px solid black;
+}
+
+.canvas-section {
+  flex: 3 1 0;
+  /* 3 parts */
+  border: 2px solid black;
 }
 </style>
