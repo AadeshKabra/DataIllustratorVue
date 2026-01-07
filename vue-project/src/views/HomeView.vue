@@ -1,48 +1,71 @@
 <template>
 
-  <div class="main-layout">
-    <div class="data-section">
-
-      <div class="button-panel">
-        <button @click="importData" class="import-button">Import Data</button>
-      </div>
+  <div class="app-container">
 
 
-      <input type="file" ref="fileInput" accept=".csv" @change="handleFileSelect" style="display: none" />
 
-      <div v-if="rows.length > 0" class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th v-for="(header, index) in headers" :key="index">
-                {{ header }}
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr v-for="(row, rowIndex) in rows" :key="rowIndex">
-              <td v-for="(cell, cellIndex) in row" :key="cellIndex">
-                {{ cell }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
+    <div class="top-panel">
+      <ul class="panel-functions">
+        <li>Rectangle</li>
+        <li>Repeat</li>
+        <li>Divide</li>
+        <li>Densify</li>
+        <li>Classify</li>
+      </ul>
     </div>
 
 
-    <div class="side-panels">
-      <div class="layers-section">
-        Layers
+    <div class="main-layout">
+
+      <div class="canvas">
+
+      </div>
+
+      <div class="data-section">
+
+        <div class="button-panel">
+          <button @click="importData" class="import-button">Import Data</button>
+        </div>
+
+        <input type="file" ref="fileInput" accept=".csv" @change="handleFileSelect" style="display: none" />
+
+        <div v-if="rows.length > 0" class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th v-for="(header, index) in headers" :key="index">
+                  {{ header }}
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr v-for="(row, rowIndex) in rows" :key="rowIndex">
+                <td v-for="(cell, cellIndex) in row" :key="cellIndex">
+                  {{ cell }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
       </div>
 
 
-      <div class="canvas-section">
-        Canvas
+      <div class="side-panels">
+        <div class="layers-section">
+          Layers
+        </div>
+
+
+        <div class="canvas-section">
+          Canvas
+        </div>
       </div>
+
+
     </div>
+
   </div>
 
 
@@ -88,7 +111,7 @@ function head(n = previousRows.value) {
 </script>
 
 <style scoped>
-.main-layout{
+.main-layout {
   display: flex;
   height: 100vh;
   width: 100%;
@@ -99,24 +122,16 @@ function head(n = previousRows.value) {
   position: relative;
 }
 
-.button-panel{
+.button-panel {
   background-color: #f5f5f5;
   padding: 10px;
   position: absolute;
-  bottom: 230px;
+  bottom: 180px;
   /* width: 100%; */
   left: 0;
   right: 0;
   display: flex;
   justify-content: flex-end;
-}
-
-.panel-bar {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 6px 8px;
-  border-bottom: 1px solid #ddd;
 }
 
 .import-button {
@@ -164,13 +179,28 @@ th {
 
 .layers-section {
   flex: 2 1 0;
-  /* 2 parts */
   border: 2px solid black;
 }
 
 .canvas-section {
   flex: 3 1 0;
-  /* 3 parts */
   border: 2px solid black;
 }
+
+.top-panel {
+  display: flex;
+  flex-direction: row;
+}
+
+.panel-functions {
+  display: flex;
+  list-style-type: none;
+  flex-direction: row;
+  gap: 10px;
+  background-color: #ddd;
+  padding: 5px;
+  width: 100%;
+}
+
+
 </style>

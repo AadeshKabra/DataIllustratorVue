@@ -12,8 +12,10 @@
                 <button class="myTextBtn" id="redoBtn" @click="redo">Redo</button>
             </div>
             <div class="myBtnGroup">
-                <button v-for="tool in tools" :key="tool" type="button" class="iconBtn" :title="tool" :id="`${tool}Btn`" />
-            </div>
+                <button v-for="tool in tools" :key="tool" type="button" class="iconBtn" :title="tool" :id="`${tool}Btn`" @click="setActiveTool(tool)" :class="{ active: activeTool == tool }" />
+            </div>  
+            <!-- <EventLayer></EventLayer> -->
+
             <div class="myBtnGroup">
                 <button class="myTextBtn" id="repeatBtn">Repeat</button>
                 <button class="myTextBtn" id="divideBtn">Divide</button>
@@ -32,11 +34,20 @@
 import "../css/ToolBar.css";
 import * as d3 from "d3";
 import * as msc from "mascot-vis";
-import {ref, onMounted} from "vue";
+import {ref, onMounted, defineEmits} from "vue";
+import EventLayer from "./EventLayer.vue";
 
 const tools = ref(["Select", "DirectSelect", "Line", "Rect", "Ellipse", "Ring", "Pen", "Text"]);
 const arrangements = ref(["Align Top", "Align Middle", "Align Bottom", "Align Left", "Align Center", "Align Right"]);
 
+const activeTool = ref(null);
 
+const emit = defineEmits(['toolSelected']);
+
+function setActiveTool(tool){
+    activeTool.value = tool;
+    emit('toolSelected', tool);
+    console.log(activeTool.value);
+}
 
 </script>
