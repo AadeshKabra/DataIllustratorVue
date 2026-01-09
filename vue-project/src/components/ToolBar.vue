@@ -2,10 +2,10 @@
     <div>
         <div class="myToolBar">
             <div class="myBtnGroup">
-                <button class="myTextBtn" id="openBtn">Open</button>
+                <button class="myTextBtn" id="openBtn" @click="emitCommand('Open')">Open</button>
                 <input type="file" id="scnFile" style="display:none" />
-                <button class="myTextBtn" id="saveBtn">Save</button>
-                <button class="myTextBtn" id="exportBtn">Export</button>
+                <button class="myTextBtn" id="saveBtn" @click="emitCommand('Save')">Save</button>
+                <button class="myTextBtn" id="exportBtn" @click="emitCommand('Export')">Export</button>
             </div>
             <div class="myBtnGroup">
                 <button class="myTextBtn" id="undoBtn" @click="undo">Undo</button>
@@ -17,13 +17,13 @@
             <!-- <EventLayer></EventLayer> -->
 
             <div class="myBtnGroup">
-                <button class="myTextBtn" id="repeatBtn">Repeat</button>
-                <button class="myTextBtn" id="divideBtn">Divide</button>
-                <button class="myTextBtn" id="densifyBtn">Densify</button>
-                <button class="myTextBtn" id="classifyBtn">Classify</button>
+                <button class="myTextBtn" id="repeatBtn" @click="emitCommand('Repeat')">Repeat</button>
+                <button class="myTextBtn" id="divideBtn" @click="emitCommand('Divide')">Divide</button>
+                <button class="myTextBtn" id="densifyBtn" @click="emitCommand('Densify')">Densify</button>
+                <button class="myTextBtn" id="classifyBtn" @click="emitCommand('Classify')">Classify</button>
             </div>
             <div class="myBtnGroup">
-                <button v-for="t in arrangements" :key="t.replace(' ', '')" type="button" class="alignBtn" :dir="t.split(' ')[1].toLowerCase()" :title="t" :id="`${t.replace(' ', '')}Btn`" />
+                <button v-for="t in arrangements" :key="t.replace(' ', '')" type="button" class="alignBtn" :dir="t.split(' ')[1].toLowerCase()" :title="t" :id="`${t.replace(' ', '')}Btn`" @click="emitCommand(t)" />
             </div>
         </div>
         
@@ -44,10 +44,24 @@ const activeTool = ref(null);
 
 const emit = defineEmits(['toolSelected']);
 
-function setActiveTool(tool){
+function emitCommand(tool){
     activeTool.value = tool;
+    console.log("Emitting toolSelected: ", tool);
     emit('toolSelected', tool);
-    console.log(activeTool.value);
+}
+
+// function setActiveTool(tool){
+//     activeTool.value = tool;
+//     emitCommand(tool);
+//     console.log(activeTool.value);
+// }
+
+function undo(){
+    emitCommand('Undo');
+}
+
+function redo(){
+    emitCommand('Redo');
 }
 
 </script>
