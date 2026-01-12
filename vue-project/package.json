@@ -16,11 +16,13 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
+    "bootstrap": "^5.3.8",
+    "d3": "7.9.0",
+    "mascot-vis": "~1.12.0",
+    "mitt": "^3.0.1",
     "pinia": "^3.0.4",
     "vue": "^3.5.26",
-    "vue-router": "^4.6.4",
-    "d3":"7.9.0",
-    "mascot-vis": "~1.12.0"
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
