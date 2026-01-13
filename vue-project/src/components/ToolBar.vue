@@ -140,11 +140,11 @@ function doRepeat() {
     closeModal();
 }
 
-// function setActiveTool(tool){
-//     activeTool.value = tool;
-//     emitCommand(tool);
-//     console.log(activeTool.value);
-// }
+function setActiveTool(tool){
+    activeTool.value = tool;
+    emitCommand(tool);
+    console.log(activeTool.value);
+}
 
 function undo(){
     emitCommand('Undo');

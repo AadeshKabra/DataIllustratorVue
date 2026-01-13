@@ -43,14 +43,15 @@ import Canvas from "./Canvas.vue";
 import EventLayer from "./EventLayer.vue";
 import DataPanel from "./DataPanel.vue";
 import { useSceneStore } from '../stores/sceneStore.js';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
 
 const activeTool = ref(null);
+const sceneStore = useSceneStore();
 
-const shapes = ref({
-  rectangles: []
-});
+const shapes = computed(() =>{
+  return {rectangles: sceneStore.scene.marks?.filter(m => m.type == 'rect') || []};
+})
 
 
 function handleToolSelected(tool){
@@ -64,25 +65,68 @@ function handleToolSelected(tool){
 
 function handleShapeCreated(shape){
   if(shape.type == 'rect'){
-    shapes.value.rectangles.push({
-      x: shape.x,
-      y: shape.y,
+    // shapes.value.rectangles.push({
+    //   x: shape.x,
+    //   y: shape.y,
+    //   width: shape.width,
+    //   height: shape.height
+    // });
+    // console.log('Rectangle created', shape);
+
+    sceneStore.scene.mark("rect", {
+      left: shape.x,
+      top: shape.y,
       width: shape.width,
-      height: shape.height
+      height: shape.height,
+      strokeWidth: 2,
+      fillColor: "transparent",
+      strokeColor: "black"
     });
-    console.log('Rectangle created', shape);
+
+  }else if(shape.type == 'ellipse'){
+    sceneStore.scene.mark("circle", {
+      x: shape.cx,
+      y: shape.cy,
+      radius: Math.max(shape.rx, shape.ry),
+      radiusX: shape.rx,
+      radiusY: shape.ry,
+      strokeWidth: 2,
+      fillColor: "transparent",
+      strokeColor: "black"
+    });
+  }else if(shape.type == 'line'){
+    sceneStore.scene.mark('line', {
+      x1: shape.x1,
+      y1: shape.y1,
+      x2: shape.x2,
+      y2: shape.y2,
+      strokeWidth: 2,
+      strokeColor: "black"
+    });
+  }else if(shape.type == 'ring'){
+    sceneStore.scene.mark('ring', {
+      x: shape.cx,
+      y: shape.cy,
+      innerRadius: shape.innerRadius,
+      outerRadius: shape.outerRadius,
+      strokeWidth: 2,
+      fillColor: "black",
+      strokeColor: "transparent"
+    })
   }
+  sceneStore.renderer.render(sceneStore.scene);
+  sceneStore.addToStack("undo");
 }
 
 // test shape creation using mascot-vis
-onMounted(() => {
-  console.log("Authoring component mounted.");
-  const sceneStore = useSceneStore();
-  sceneStore.scene.mark("circle", {x: 50, y: 50,
-    radius: 50, fillColor: "none"
-  });
-  sceneStore.renderer.render(sceneStore.scene);
-});
+// onMounted(() => {
+//   console.log("Authoring component mounted.");
+//   const sceneStore = useSceneStore();
+//   sceneStore.scene.mark("circle", {x: 50, y: 50,
+//     radius: 50, fillColor: "none"
+//   });
+//   sceneStore.renderer.render(sceneStore.scene);
+// });
 
 </script>
 
