@@ -15,13 +15,14 @@
 </template>
 
 <script setup>
-    import { ref, watch, onMounted, onBeforeUnmount } from "vue";
+    import { ref, watch, onMounted, onBeforeUnmount, defineEmits } from "vue";
     import "../css/Canvas.css";
     import * as d3 from "d3";
 
     const props = defineProps({
         rectangles: Array
     })
+
 
 </script>
 

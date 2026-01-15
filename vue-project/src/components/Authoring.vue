@@ -28,7 +28,7 @@
 
 
       <div class="canvas-section">
-        Canvas
+        <PropertyPanel></PropertyPanel>
       </div>
     </div>
   </div>
@@ -42,8 +42,10 @@ import ToolBar from "./ToolBar.vue";
 import Canvas from "./Canvas.vue";
 import EventLayer from "./EventLayer.vue";
 import DataPanel from "./DataPanel.vue";
+import PropertyPanel from "./PropertyPanel.vue";
 import { useSceneStore } from '../stores/sceneStore.js';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineEmits } from 'vue';
+import { storeToRefs } from "pinia";
 
 
 const activeTool = ref(null);
@@ -75,13 +77,21 @@ function handleShapeCreated(shape){
 }
 
 // test shape creation using mascot-vis
+const emit = defineEmits(['itemSelected']);
 onMounted(() => {
   console.log("Authoring component mounted.");
   const sceneStore = useSceneStore();
-  sceneStore.scene.mark("circle", {x: 50, y: 50,
+  const {scene, selectedItem} = storeToRefs(sceneStore);
+  scene.value.mark("circle", {x: 50, y: 50,
     radius: 50, fillColor: "none"
   });
   sceneStore.renderer.render(sceneStore.scene);
+
+  selectedItem.value = "circle0"
+
+  // let item = scene.value.getItem("circle0")
+  // console.log("scene", item);
+
 });
 
 </script>

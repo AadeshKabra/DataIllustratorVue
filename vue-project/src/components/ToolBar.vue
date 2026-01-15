@@ -50,7 +50,7 @@
 
                         <label class="form-label">Repeat based on</label>
                         <select class="form-select" v-model="selectedField">
-                        <option disabled value="">Please select an option</option>
+                        <!-- <option disabled value="">Please select an option</option> -->
                         <option v-for="option in options" :key="option" :value="option === 'row of data' ? 'atlas_rowId' : option">{{ option }}</option>
                         </select>
 
@@ -119,32 +119,31 @@ function closeModal() {
 
 function doRepeat() {
     console.log('Start repeating shapes based on field: ', selectedField.value);
-    let item = sceneStore.scene.getItem("circle0");
-    console.log("scene", scene, sceneStore.scene, item);
+    let item = scene.value.getItem("circle0");
+    console.log("scene", item);
 
-    console.log('layout-test', item, sceneStore.datasets.getUniqueFieldValues(selectedField.value).length);
     let layout = getDefaultCollectionLayout(item, datasets.value.getUniqueFieldValues(selectedField.value).length);
-    let coll = sceneStore.scene.repeat(item, datasets.value, {field: selectedField.value, layout: layout});
+    let coll = scene.value.repeat(item, datasets.value, {field: selectedField.value, layout: layout});
 
-    console.log("test", layout, coll)
+    // console.log("test", layout, coll)  It:layout, le: coll
     if (coll.children.length < 25) {
         if (layout.numCols === 1) {
-            sceneStore.scene.axis("y", selectedField.value, {item: item});
+            scene.value.axis("y", selectedField.value, {item: item});
         } else if (layout.numRows === 1) {
-            sceneStore.scene.axis("x", selectedField.value, {item: item});
+            scene.value.axis("x", selectedField.value, {item: item});
         }
     }
-    sceneStore.scene.reCreateRelatedAxes(coll);
-    sceneStore.renderer.render(sceneStore.scene);
+    scene.value.reCreateRelatedAxes(coll);
+    sceneStore.renderer.render(scene.value);
 
     closeModal();
 }
 
-// function setActiveTool(tool){
-//     activeTool.value = tool;
-//     emitCommand(tool);
-//     console.log(activeTool.value);
-// }
+function setActiveTool(tool){
+    activeTool.value = tool;
+    emitCommand(tool);
+    console.log(activeTool.value);
+}
 
 function undo(){
     emitCommand('Undo');

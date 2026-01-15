@@ -8,6 +8,7 @@ export const useSceneStore = defineStore('scene', {
     renderer: msc.renderer("svg", "canvas"),
     datasets: null,
     stack: [],
+    selectedItem: null,
     readCSV: false,
   }),
 
