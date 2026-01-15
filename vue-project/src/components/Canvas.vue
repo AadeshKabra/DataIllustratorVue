@@ -1,8 +1,8 @@
 <template>
     <!-- <canvas v-if="type === 'canvas'" class="canvas" id="canvas"></canvas>
     <svg v-else class="canvas" id="canvas"></svg> -->
-    <!-- <svg class="canvas" id="canvas"></svg> -->
-    <svg class="canvas" id="canvas">
+    <svg class="canvas" id="canvas"></svg>
+    <!-- <svg class="canvas" id="canvas">
         <rect v-for="(rect, index) in rectangles"
         :key="index"
         :x="rect.x"
@@ -11,7 +11,7 @@
         :height="rect.height"
         fill="transparent"
         stroke="black"/>
-    </svg>
+    </svg> -->
 </template>
 
 <script setup>
