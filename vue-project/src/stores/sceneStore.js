@@ -27,9 +27,12 @@ export const useSceneStore = defineStore('scene', {
     addToStack (type) {
       let stackType = type ? type : "undo";
       let scn = this.scene.toJSON();
-      for (let t of this.datasets) {
-        if (!(t.id in scn.tables)) {
-            scn.tables[t.id] = t.toJSON();
+      // Only iterate over datasets if it exists and is iterable
+      if (this.datasets && Array.isArray(this.datasets)) {
+        for (let t of this.datasets) {
+          if (!(t.id in scn.tables)) {
+              scn.tables[t.id] = t.toJSON();
+          }
         }
       }
 

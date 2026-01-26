@@ -1,6 +1,11 @@
 <template>
-    <svg id="evtLayer" class="canvas" @dbclick="handleDoubleClick" @mousedown="handleMouseDown"
-        @mousemove="handleMouseMove" @mouseup="handleMouseUp" :class="getCursorClass()">
+    <svg ref="evtLayerRef" id="evtLayer" class="canvas" 
+        @dblclick="handleDoubleClick" 
+        @mousedown="handleMouseDown"
+        @mousemove="handleMouseMove" 
+        @mouseup="handleMouseUp" 
+        @mouseleave="handleMouseLeave" 
+        :class="getCursorClass()">
 
         <rect id="rectToolUI" style="stroke: #1592e6; stroke-width: 1.5px; fill-opacity: 0" :x="rectPreview.x"
             :y="rectPreview.y" :width="rectPreview.width" :height="rectPreview.height"
@@ -11,7 +16,8 @@
             :style="{ visibility: ellipsePreview.visible ? 'visible' : 'hidden' }"></ellipse>
 
         <line id="lineToolUI" style="stroke: #1592e6; stroke-width: 1.5px;" :x1="linePreview.x1" :y1="linePreview.y1"
-            :x2="linePreview.x2" :y2="linePreview.y2" :style="{ visibility: linePreview.visible ? 'visible' : 'hidden' }">
+            :x2="linePreview.x2" :y2="linePreview.y2"
+            :style="{ visibility: linePreview.visible ? 'visible' : 'hidden' }">
         </line>
 
         <circle id="ringToolOuterUI" style="stroke: #1592e6; stroke-width: 1.5px; fill-opacity: 0;" :cx="ringPreview.cx"
@@ -21,21 +27,20 @@
             :cy="ringPreview.cy" :r="ringPreview.innerRadius"
             :style="{ visibility: ringPreview.visible ? 'visible' : 'hidden' }"></circle>
 
-
         <g v-if="selectedShape && !isDrawing">
             <g v-if="selectedShape.type == 'rect'">
                 <rect :x="selectedShape.x" :y="selectedShape.y" :width="selectedShape.width"
-                    :height="selectedShape.height" fill="none" stroke="#1592e6" stroke-width="2" stroke-dasharray="5,5">
+                    :height="selectedShape.height" fill="none" stroke="#1592e6" stroke-width="2">
                 </rect>
 
-                <!-- vertex -->
                 <circle v-for="(handle, idx) in getRectHandles(selectedShape)" :key="`corner-${idx}`" :cx="handle.x"
-                    :cy="handle.y" r="6" fill="white" stroke="#1592e6" stroke-width="2" class="handle"
+                    :cy="handle.y" r="6" fill="white" stroke="#1592e6" stroke-width="2" 
+                    :class="['handle', `cursor-${handle.position}`]"
                     :data-handle="handle.position" @mousedown.stop="startResize($event, handle.position)"></circle>
 
-                <!-- edge -->
                 <circle v-for="(handle, idx) in getRectEdgeHandles(selectedShape)" :key="`edge-${idx}`" :cx="handle.x"
-                    :cy="handle.y" r="5" fill="white" stroke="#1592e6" stroke-width="2" class="handle"
+                    :cy="handle.y" r="5" fill="white" stroke="#1592e6" stroke-width="2" 
+                    :class="['handle', `cursor-${handle.position}`]"
                     :data-handle="handle.position" @mousedown.stop="startResize($event, handle.position)"></circle>
             </g>
 
@@ -44,7 +49,8 @@
                     fill="none" stroke="#1592e6" stroke-width="2" stroke-dasharray="5,5" />
 
                 <circle v-for="(handle, idx) in getEllipseHandles(selectedShape)" :key="`ellipse-${idx}`" :cx="handle.x"
-                    :cy="handle.y" r="6" fill="white" stroke="#1592e6" stroke-width="2" class="handle"
+                    :cy="handle.y" r="6" fill="white" stroke="#1592e6" stroke-width="2" 
+                    :class="['handle', `cursor-${handle.position}`]"
                     :data-handle="handle.position" @mousedown.stop="startResize($event, handle.position)" />
             </g>
 
@@ -53,32 +59,25 @@
                 <line :x1="selectedShape.x1" :y1="selectedShape.y1" :x2="selectedShape.x2" :y2="selectedShape.y2"
                     stroke="#1592e6" stroke-width="2" stroke-dasharray="5,5" />
 
-                <!-- endpoint -->
                 <circle :cx="selectedShape.x1" :cy="selectedShape.y1" r="6" fill="white" stroke="#1592e6"
-                    stroke-width="2" class="handle" data-handle="start"
+                    stroke-width="2" class="handle cursor-move" data-handle="start"
                     @mousedown.stop="startResize($event, 'start')" />
                 <circle :cx="selectedShape.x2" :cy="selectedShape.y2" r="6" fill="white" stroke="#1592e6"
-                    stroke-width="2" class="handle" data-handle="end" @mousedown.stop="startResize($event, 'end')" />
+                    stroke-width="2" class="handle cursor-move" data-handle="end" @mousedown.stop="startResize($event, 'end')" />
             </g>
 
             <g v-if="selectedShape.type === 'ring'">
-                <!-- selection -->
-                <circle :cx="selectedShape.cx" :cy="selectedShape.cy" 
-                    :r="selectedShape.outerRadius"
-                    fill="none" stroke="#1592e6" stroke-width="2" stroke-dasharray="5,5"/>
-                <circle :cx="selectedShape.cx" :cy="selectedShape.cy" 
-                    :r="selectedShape.innerRadius"
-                    fill="none" stroke="#1592e6" stroke-width="2" stroke-dasharray="5,5"/>
-                
-                <!-- radius -->
-                <circle :cx="selectedShape.cx + selectedShape.outerRadius" :cy="selectedShape.cy" r="6"
-                    fill="white" stroke="#1592e6" stroke-width="2"
-                    class="handle" data-handle="outer"
-                    @mousedown.stop="startResize($event, 'outer')"/>
-                <circle :cx="selectedShape.cx + selectedShape.innerRadius" :cy="selectedShape.cy" r="6"
-                    fill="white" stroke="#1592e6" stroke-width="2"
-                    class="handle" data-handle="inner"
-                    @mousedown.stop="startResize($event, 'inner')"/>
+                <circle :cx="selectedShape.cx" :cy="selectedShape.cy" :r="selectedShape.outerRadius" fill="none"
+                    stroke="#1592e6" stroke-width="2" stroke-dasharray="5,5" />
+                <circle :cx="selectedShape.cx" :cy="selectedShape.cy" :r="selectedShape.innerRadius" fill="none"
+                    stroke="#1592e6" stroke-width="2" stroke-dasharray="5,5" />
+
+                <circle :cx="selectedShape.cx + selectedShape.outerRadius" :cy="selectedShape.cy" r="6" fill="white"
+                    stroke="#1592e6" stroke-width="2" class="handle cursor-ew-resize" data-handle="outer"
+                    @mousedown.stop="startResize($event, 'outer')" />
+                <circle :cx="selectedShape.cx + selectedShape.innerRadius" :cy="selectedShape.cy" r="6" fill="white"
+                    stroke="#1592e6" stroke-width="2" class="handle cursor-ew-resize" data-handle="inner"
+                    @mousedown.stop="startResize($event, 'inner')" />
             </g>
 
         </g>
@@ -87,7 +86,7 @@
 
 <script setup>
 
-import { ref, defineProps, defineEmits } from 'vue';
+import { ref, defineProps, defineEmits, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({
     activeTool: String,
@@ -96,19 +95,68 @@ const props = defineProps({
 
 const emit = defineEmits(['shapeCreated', 'shapeModified', 'shapeSelected']);
 
+const evtLayerRef = ref(null);
 const isDrawing = ref(false);
 const startPoint = ref({ x: 0, y: 0 });
 const isResizing = ref(false);
 const resizeHandle = ref(null);
 const selectedShape = ref(null);
+const originalShape = ref(null);
 
 const rectPreview = ref({ x: 0, y: 0, width: 0, height: 0, visible: false });
 const ellipsePreview = ref({ cx: 0, cy: 0, rx: 0, ry: 0, visible: false });
 const linePreview = ref({ x1: 0, y1: 0, x2: 0, y2: 0, visible: false });
 const ringPreview = ref({ cx: 0, cy: 0, outerRadius: 0, innerRadius: 0, visible: false });
 
+onMounted(() => {
+    document.addEventListener('mouseup', handleGlobalMouseUp);
+    document.addEventListener('mousemove', handleGlobalMouseMove);
+});
+
+onUnmounted(() => {
+    document.removeEventListener('mouseup', handleGlobalMouseUp);
+    document.removeEventListener('mousemove', handleGlobalMouseMove);
+});
+
+function handleGlobalMouseUp(event) {
+    // Priority: Handle resize stop anywhere in the document
+    if (isResizing.value) {
+        console.log('Global mouse up - stopping resize');
+        stopResize();
+    } else if (isDrawing.value) {
+        console.log('Global mouse up - stopping draw');
+        handleMouseUp(event);
+    }
+}
+
+function handleGlobalMouseMove(event) {
+    // Consolidated resizing logic: Handles mouse movement anywhere once resizing starts.
+    // This prevents "dead zones" if the mouse leaves the SVG during a drag.
+    if (isResizing.value && selectedShape.value) {
+        const svg = evtLayerRef.value || document.getElementById('evtLayer');
+        if (svg) {
+            // We pass the global event directly; getMousePosition uses clientX/Y
+            const pt = getMousePosition(svg, event);
+            
+            resizeShape(pt);
+            
+            // Don't emit shapeModified during resize - only update the selection frame
+            // The actual shape will be updated when resize ends (on mouse up)
+            // This prevents the shape from disappearing and old marks from accumulating
+        }
+    }
+}
+
+
+function handleMouseLeave(event) {
+    // Resizing is handled by global listener now, so we don't need logic here.
+    // Log for debugging if needed: console.log('Mouse left SVG');
+}
+
+
 function getMousePosition(svg, event) {
     const ctm = svg.getScreenCTM();
+    if (!ctm) return { x: 0, y: 0 };
     return {
         x: (event.clientX - ctm.e) / ctm.a,
         y: (event.clientY - ctm.f) / ctm.d
@@ -116,11 +164,15 @@ function getMousePosition(svg, event) {
 }
 
 
-function selectShape(event, svg, pt){
-    if(props.activeTool != 'Select') return false;
+function selectShape(event, svg, pt) {
+    if (props.activeTool != 'Select') return false;
 
     const clickedShape = findShapeAtPoint(pt);
-    if(clickedShape){
+    if (clickedShape) {
+        // Ensure the shape has an ID for tracking
+        if (!clickedShape.id) {
+            clickedShape.id = `${clickedShape.type}_${Date.now()}_${Math.random()}`;
+        }
         selectedShape.value = clickedShape;
         emit('shapeSelected', clickedShape);
         return true;
@@ -130,29 +182,29 @@ function selectShape(event, svg, pt){
     return false;
 }
 
-function findShapeAtPoint(pt){
-    if(!props.shapes) return null;
+function findShapeAtPoint(pt) {
+    if (!props.shapes) return null;
 
-    for(let i=props.shapes.length - 1; i>=0; i--){
+    for (let i = props.shapes.length - 1; i >= 0; i--) {
         const shape = props.shapes[i];
-        if(shape.type == 'rect'){
-            if(pt.x >= shape.x && pt.x <= shape.x + shape.width && pt.y >= shape.y && pt.y <= shape.y + shape.height){
+        if (shape.type == 'rect') {
+            if (pt.x >= shape.x && pt.x <= shape.x + shape.width && pt.y >= shape.y && pt.y <= shape.y + shape.height) {
                 return shape;
             }
-        }else if(shape.type == 'ellipse'){
+        } else if (shape.type == 'ellipse') {
             const dx = (pt.x - shape.cx) / shape.rx;
             const dy = (pt.y - shape.cy) / shape.ry;
-            if(dx * dx + dy * dy <= 1){
+            if (dx * dx + dy * dy <= 1) {
                 return shape;
             }
-        }else if(shape.type == 'line'){
+        } else if (shape.type == 'line') {
             const dist = distanceToLine(pt, shape.x1, shape.y1, shape.x2, shape.y2);
-            if(dist < 10){
+            if (dist < 10) {
                 return shape;
             }
-        }else if(shape.type == 'ring'){
+        } else if (shape.type == 'ring') {
             const dist = Math.sqrt(Math.pow(pt.x - shape.cx, 2) + Math.pow(pt.y - shape.cy, 2));
-            if(dist <= shape.outerRadius && dist >= shape.innerRadius){
+            if (dist <= shape.outerRadius && dist >= shape.innerRadius) {
                 return shape;
             }
         }
@@ -162,7 +214,7 @@ function findShapeAtPoint(pt){
 }
 
 
-function distanceToLine(pt, x1, y1, x2, y2){
+function distanceToLine(pt, x1, y1, x2, y2) {
     const A = pt.x - x1;
     const B = pt.y - y1;
     const C = x2 - x1;
@@ -172,18 +224,18 @@ function distanceToLine(pt, x1, y1, x2, y2){
     const lenSq = C * C + D * D;
     let param = -1;
 
-    if(lenSq!=0){
+    if (lenSq != 0) {
         param = dot / lenSq;
     }
 
     let xx, yy;
-    if(param < 0){
+    if (param < 0) {
         xx = x1;
         yy = y1;
-    }else if(param > 1){
+    } else if (param > 1) {
         xx = x2;
         yy = y2;
-    }else{
+    } else {
         xx = x1 + param * C;
         yy = y1 + param * D;
     }
@@ -195,248 +247,259 @@ function distanceToLine(pt, x1, y1, x2, y2){
 }
 
 
-function startResize(event, handle){
+function startResize(event, handle) {
     event.stopPropagation();
+    event.preventDefault();
+    
     isResizing.value = true;
     resizeHandle.value = handle;
 
+    // Use currentTarget (the handle) to get ownerSVGElement
     const svg = event.currentTarget.ownerSVGElement;
     startPoint.value = getMousePosition(svg, event);
+
+    // Deep clone the original shape
+    originalShape.value = JSON.parse(JSON.stringify(selectedShape.value));
+
+    console.log('Start resize:', handle, 'Original:', originalShape.value);
 }
 
 
-function handleMouseDown(event){
-    const svg = event.currentTarget;
-    const pt = getMousePosition(svg, event);
+function handleMouseDown(event) {
+    if (event.button !== 0) return;
     
-    // Check for selection mode
-    if (props.activeTool === 'Select') {
-        selectShape(event, svg, pt);
+    // Don't start a new action if we're already resizing
+    if (isResizing.value) {
         return;
     }
     
+    const svg = event.currentTarget;
+    const pt = getMousePosition(svg, event);
+
+    // Check for selection mode
+    if (props.activeTool === 'Select') {
+        if (!selectShape(event, svg, pt)) {
+            selectedShape.value = null;
+        }
+        return;
+    }
+
     // Drawing mode
-    if(!['Rect', 'Ellipse', 'Line', 'Ring'].includes(props.activeTool)){
+    if (!['Rect', 'Ellipse', 'Line', 'Ring'].includes(props.activeTool)) {
         return;
     }
 
     isDrawing.value = true;
     startPoint.value = { x: pt.x, y: pt.y };
 
-    if(props.activeTool === 'Rect'){
-        rectPreview.value = { x: pt.x, y: pt.y, width: 0, height: 0 };
-    } else if(props.activeTool === 'Ellipse'){
-        ellipsePreview.value = { cx: pt.x, cy: pt.y, rx: 0, ry: 0 };
-    } else if(props.activeTool === 'Line'){
-        linePreview.value = { x1: pt.x, y1: pt.y, x2: pt.x, y2: pt.y };
-    } else if(props.activeTool === 'Ring'){
-        ringPreview.value = { cx: pt.x, cy: pt.y, outerRadius: 0, innerRadius: 0 };
+    // Show preview
+    if (props.activeTool === 'Rect') {
+        rectPreview.value = { x: pt.x, y: pt.y, width: 0, height: 0, visible: true };
+    } else if (props.activeTool === 'Ellipse') {
+        ellipsePreview.value = { cx: pt.x, cy: pt.y, rx: 0, ry: 0, visible: true };
+    } else if (props.activeTool === 'Line') {
+        linePreview.value = { x1: pt.x, y1: pt.y, x2: pt.x, y2: pt.y, visible: true };
+    } else if (props.activeTool === 'Ring') {
+        ringPreview.value = { 
+            cx: pt.x, cy: pt.y, 
+            outerRadius: 0, innerRadius: 0, 
+            visible: true 
+        };
     }
 }
 
-function handleMouseMove(event){
+function handleMouseMove(event) {
     const svg = event.currentTarget;
     const pt = getMousePosition(svg, event);
-    
-    // Handle resizing
-    if (isResizing.value && selectedShape.value) {
-        resizeShape(pt);
-        emit('shapeModified', selectedShape.value);
-        return;
-    }
-    
-    // Handle drawing
-    if(!isDrawing.value || !['Rect', 'Ellipse', 'Line', 'Ring'].includes(props.activeTool)){
+
+    // Resizing is handled EXCLUSIVELY by handleGlobalMouseMove now.
+    // This prevents double-handling and conflicts.
+    if (isResizing.value) {
         return;
     }
 
-    if(props.activeTool === 'Rect'){
-        const width = pt.x - startPoint.value.x;
-        const height = pt.y - startPoint.value.y;
-        rectPreview.value = {
-            x: width < 0 ? pt.x : startPoint.value.x,
-            y: height < 0? pt.y : startPoint.value.y,
-            width: Math.abs(width),
-            height: Math.abs(height)
-        };
-    } else if(props.activeTool === 'Ellipse'){
-        const rx = Math.abs(pt.x - startPoint.value.x);
-        const ry = Math.abs(pt.y - startPoint.value.y);
-        ellipsePreview.value = {
-            cx: startPoint.value.x, cy: startPoint.value.y,
-            rx: rx, ry: ry
-        };
-    } else if(props.activeTool === 'Line'){
-        linePreview.value = {
-            x1: startPoint.value.x, y1: startPoint.value.y,
-            x2: pt.x, y2: pt.y
-        };
-    } else if(props.activeTool === 'Ring'){
-        const distance = Math.sqrt(
-            Math.pow(pt.x - startPoint.value.x, 2) + 
-            Math.pow(pt.y - startPoint.value.y, 2)
-        );
-        ringPreview.value = {
-            cx: startPoint.value.x, cy: startPoint.value.y,
-            outerRadius: distance, innerRadius: distance * 0.6
-        };
+    if (isDrawing.value && ['Rect', 'Ellipse', 'Line', 'Ring'].includes(props.activeTool)) {
+        if (props.activeTool === 'Rect') {
+            const width = pt.x - startPoint.value.x;
+            const height = pt.y - startPoint.value.y;
+            rectPreview.value = {
+                x: width < 0 ? pt.x : startPoint.value.x,
+                y: height < 0 ? pt.y : startPoint.value.y,
+                width: Math.abs(width),
+                height: Math.abs(height),
+                visible: true
+            };
+        } else if (props.activeTool === 'Ellipse') {
+            const rx = Math.abs(pt.x - startPoint.value.x);
+            const ry = Math.abs(pt.y - startPoint.value.y);
+            ellipsePreview.value = {
+                cx: startPoint.value.x, 
+                cy: startPoint.value.y,
+                rx: rx, 
+                ry: ry,
+                visible: true
+            };
+        } else if (props.activeTool === 'Line') {
+            linePreview.value = {
+                x1: startPoint.value.x, 
+                y1: startPoint.value.y,
+                x2: pt.x, 
+                y2: pt.y,
+                visible: true
+            };
+        } else if (props.activeTool === 'Ring') {
+            const distance = Math.sqrt(
+                Math.pow(pt.x - startPoint.value.x, 2) +
+                Math.pow(pt.y - startPoint.value.y, 2)
+            );
+            ringPreview.value = {
+                cx: startPoint.value.x, 
+                cy: startPoint.value.y,
+                outerRadius: distance, 
+                innerRadius: distance * 0.6,
+                visible: true
+            };
+        }
     }
 }
 
 function resizeShape(pt) {
-    if (!selectedShape.value) return;
-    
+    if (!selectedShape.value || !originalShape.value) return;
+
     const shape = selectedShape.value;
-    
+    const orig = originalShape.value;
+
     if (shape.type === 'rect') {
-        const newShape = {...shape};
+        const minSize = 5;
         
-        switch(resizeHandle.value) {
-            case 'nw': // Top-left
-                newShape.width = shape.x + shape.width - pt.x;
-                newShape.height = shape.y + shape.height - pt.y;
-                newShape.x = pt.x;
-                newShape.y = pt.y;
+        switch (resizeHandle.value) {
+            case 'nw':
+                shape.x = Math.min(pt.x, orig.x + orig.width - minSize);
+                shape.y = Math.min(pt.y, orig.y + orig.height - minSize);
+                shape.width = Math.max(minSize, orig.x + orig.width - shape.x);
+                shape.height = Math.max(minSize, orig.y + orig.height - shape.y);
                 break;
-            case 'ne': // Top-right
-                newShape.width = pt.x - shape.x;
-                newShape.height = shape.y + shape.height - pt.y;
-                newShape.y = pt.y;
+            case 'ne':
+                shape.y = Math.min(pt.y, orig.y + orig.height - minSize);
+                shape.width = Math.max(minSize, pt.x - orig.x);
+                shape.height = Math.max(minSize, orig.y + orig.height - shape.y);
                 break;
-            case 'sw': // Bottom-left
-                newShape.width = shape.x + shape.width - pt.x;
-                newShape.height = pt.y - shape.y;
-                newShape.x = pt.x;
+            case 'sw':
+                shape.x = Math.min(pt.x, orig.x + orig.width - minSize);
+                shape.width = Math.max(minSize, orig.x + orig.width - shape.x);
+                shape.height = Math.max(minSize, pt.y - orig.y);
                 break;
-            case 'se': // Bottom-right
-                newShape.width = pt.x - shape.x;
-                newShape.height = pt.y - shape.y;
+            case 'se':
+                shape.width = Math.max(minSize, pt.x - orig.x);
+                shape.height = Math.max(minSize, pt.y - orig.y);
                 break;
-            case 'n': // Top edge
-                newShape.height = shape.y + shape.height - pt.y;
-                newShape.y = pt.y;
+            case 'n':
+                shape.y = Math.min(pt.y, orig.y + orig.height - minSize);
+                shape.height = Math.max(minSize, orig.y + orig.height - shape.y);
                 break;
-            case 's': // Bottom edge
-                newShape.height = pt.y - shape.y;
+            case 's':
+                shape.height = Math.max(minSize, pt.y - orig.y);
                 break;
-            case 'w': // Left edge
-                newShape.width = shape.x + shape.width - pt.x;
-                newShape.x = pt.x;
+            case 'w':
+                shape.x = Math.min(pt.x, orig.x + orig.width - minSize);
+                shape.width = Math.max(minSize, orig.x + orig.width - shape.x);
                 break;
-            case 'e': // Right edge
-                newShape.width = pt.x - shape.x;
+            case 'e':
+                shape.width = Math.max(minSize, pt.x - orig.x);
                 break;
         }
-        
-        // Ensure positive dimensions
-        if (newShape.width < 0) {
-            newShape.x += newShape.width;
-            newShape.width = Math.abs(newShape.width);
-        }
-        if (newShape.height < 0) {
-            newShape.y += newShape.height;
-            newShape.height = Math.abs(newShape.height);
-        }
-        
-        selectedShape.value = newShape;
     }
     else if (shape.type === 'ellipse') {
-        const newShape = {...shape};
+        const minRadius = 5;
         
-        switch(resizeHandle.value) {
+        switch (resizeHandle.value) {
             case 'right':
-                newShape.rx = Math.abs(pt.x - shape.cx);
-                break;
             case 'left':
-                newShape.rx = Math.abs(pt.x - shape.cx);
+                shape.rx = Math.max(minRadius, Math.abs(pt.x - orig.cx));
                 break;
             case 'top':
-                newShape.ry = Math.abs(pt.y - shape.cy);
-                break;
             case 'bottom':
-                newShape.ry = Math.abs(pt.y - shape.cy);
+                shape.ry = Math.max(minRadius, Math.abs(pt.y - orig.cy));
                 break;
         }
-        
-        selectedShape.value = newShape;
     }
     else if (shape.type === 'line') {
-        const newShape = {...shape};
-        
         if (resizeHandle.value === 'start') {
-            newShape.x1 = pt.x;
-            newShape.y1 = pt.y;
+            shape.x1 = pt.x;
+            shape.y1 = pt.y;
         } else if (resizeHandle.value === 'end') {
-            newShape.x2 = pt.x;
-            newShape.y2 = pt.y;
+            shape.x2 = pt.x;
+            shape.y2 = pt.y;
         }
-        
-        selectedShape.value = newShape;
     }
     else if (shape.type === 'ring') {
-        const newShape = {...shape};
         const distance = Math.sqrt(
-            Math.pow(pt.x - shape.cx, 2) + 
-            Math.pow(pt.y - shape.cy, 2)
+            Math.pow(pt.x - orig.cx, 2) + Math.pow(pt.y - orig.cy, 2)
         );
         
         if (resizeHandle.value === 'outer') {
-            newShape.outerRadius = distance;
+            shape.outerRadius = Math.max(10, distance);
+            if (shape.innerRadius >= shape.outerRadius) {
+                shape.innerRadius = Math.max(5, shape.outerRadius - 5);
+            }
         } else if (resizeHandle.value === 'inner') {
-            newShape.innerRadius = Math.min(distance, shape.outerRadius - 5);
+            shape.innerRadius = Math.max(5, Math.min(distance, shape.outerRadius - 5));
         }
-        
-        selectedShape.value = newShape;
     }
 }
 
-function handleMouseUp(event){
-    // Handle resize end
+function handleMouseUp(event) {
+    // Handle resize end (Locally)
     if (isResizing.value) {
-        isResizing.value = false;
-        resizeHandle.value = null;
+        console.log('Local mouse up - stopping resize');
+        stopResize();
         return;
     }
-    
+
     // Handle drawing end
-    if(!isDrawing.value || !['Rect', 'Ellipse', 'Line', 'Ring'].includes(props.activeTool)){
-        return;
-    }
+    if (isDrawing.value && ['Rect', 'Ellipse', 'Line', 'Ring'].includes(props.activeTool)) {
+        isDrawing.value = false;
+        
+        // Hide previews
+        rectPreview.value.visible = false;
+        ellipsePreview.value.visible = false;
+        linePreview.value.visible = false;
+        ringPreview.value.visible = false;
 
-    isDrawing.value = false;
-
-    if(props.activeTool === 'Rect' && rectPreview.value.width > 0 && rectPreview.value.height > 0){
-        emit('shapeCreated', {
-            type: 'rect',
-            x: rectPreview.value.x,
-            y: rectPreview.value.y,
-            width: rectPreview.value.width,
-            height: rectPreview.value.height
-        });
-    } else if(props.activeTool === 'Ellipse' && (ellipsePreview.value.rx > 0 || ellipsePreview.value.ry > 0)){
-        emit('shapeCreated', {
-            type: 'ellipse',
-            cx: ellipsePreview.value.cx,
-            cy: ellipsePreview.value.cy,
-            rx: ellipsePreview.value.rx,
-            ry: ellipsePreview.value.ry
-        });
-    } else if(props.activeTool === 'Line'){
-        emit('shapeCreated', {
-            type: 'line',
-            x1: linePreview.value.x1,
-            y1: linePreview.value.y1,
-            x2: linePreview.value.x2,
-            y2: linePreview.value.y2
-        });
-    } else if(props.activeTool === 'Ring' && ringPreview.value.outerRadius > 0){
-        emit('shapeCreated', {
-            type: 'ring',
-            cx: ringPreview.value.cx,
-            cy: ringPreview.value.cy,
-            outerRadius: ringPreview.value.outerRadius,
-            innerRadius: ringPreview.value.innerRadius
-        });
+        // Emit shape creation
+        if (props.activeTool === 'Rect' && Math.abs(rectPreview.value.width) > 1 && Math.abs(rectPreview.value.height) > 1) {
+            emit('shapeCreated', {
+                type: 'rect',
+                x: rectPreview.value.x,
+                y: rectPreview.value.y,
+                width: Math.max(5, Math.abs(rectPreview.value.width)),
+                height: Math.max(5, Math.abs(rectPreview.value.height))
+            });
+        } else if (props.activeTool === 'Ellipse' && (Math.abs(ellipsePreview.value.rx) > 1 || Math.abs(ellipsePreview.value.ry) > 1)) {
+            emit('shapeCreated', {
+                type: 'ellipse',
+                cx: ellipsePreview.value.cx,
+                cy: ellipsePreview.value.cy,
+                rx: Math.max(5, Math.abs(ellipsePreview.value.rx)),
+                ry: Math.max(5, Math.abs(ellipsePreview.value.ry))
+            });
+        } else if (props.activeTool === 'Line') {
+            emit('shapeCreated', {
+                type: 'line',
+                x1: linePreview.value.x1,
+                y1: linePreview.value.y1,
+                x2: linePreview.value.x2,
+                y2: linePreview.value.y2
+            });
+        } else if (props.activeTool === 'Ring' && ringPreview.value.outerRadius > 1) {
+            emit('shapeCreated', {
+                type: 'ring',
+                cx: ringPreview.value.cx,
+                cy: ringPreview.value.cy,
+                outerRadius: Math.max(10, ringPreview.value.outerRadius),
+                innerRadius: Math.max(5, ringPreview.value.innerRadius)
+            });
+        }
     }
 }
 
@@ -480,6 +543,32 @@ function getCursorClass() {
     return "cursor-default";
 }
 
+function handleDoubleClick(event){
+    if(selectedShape.value && props.activeTool == 'Select'){
+        console.log('Double-clicked shape:', selectedShape.value);
+    }
+}
+
+function stopResize() {
+    console.log('Stopping resize for shape');
+    
+    // Capture data needed for emit
+    const shapeToEmit = selectedShape.value ? { ...selectedShape.value } : null;
+
+    // IMPORTANT: Reset state flags IMMEDIATELY to prevent getting stuck
+    // This ensures drag mode is killed even if the emit causes an error
+    isResizing.value = false;
+    resizeHandle.value = null;
+    originalShape.value = null;
+
+    // Now safe to emit - update the actual shape only when resize ends
+    // This ensures the shape is updated once with the final size, preventing
+    // intermediate marks and shape disappearance issues
+    if (shapeToEmit && shapeToEmit.id) {
+        emit('shapeModified', shapeToEmit);
+    }
+}
+
 </script>
 
 
@@ -491,6 +580,7 @@ function getCursorClass() {
     width: 100%;
     height: 100%;
     pointer-events: auto;
+    touch-action: none;
 }
 
 .cursor-crosshair {
@@ -508,4 +598,33 @@ function getCursorClass() {
 .cursor-default {
     cursor: default;
 }
+
+.handle {
+    pointer-events: all;
+}
+
+.handle:hover {
+    fill: #2196f3;
+    stroke-width: 3px;
+}
+
+/* Resize cursors for rectangle handles */
+.cursor-nw { cursor: nw-resize; }
+.cursor-ne { cursor: ne-resize; }
+.cursor-sw { cursor: sw-resize; }
+.cursor-se { cursor: se-resize; }
+.cursor-n { cursor: n-resize; }
+.cursor-s { cursor: s-resize; }
+.cursor-e { cursor: e-resize; }
+.cursor-w { cursor: w-resize; }
+
+/* Resize cursors for ellipse handles */
+.cursor-right { cursor: ew-resize; }
+.cursor-left { cursor: ew-resize; }
+.cursor-top { cursor: ns-resize; }
+.cursor-bottom { cursor: ns-resize; }
+
+/* Move cursor for line and ring handles */
+.cursor-move { cursor: move; }
+.cursor-ew-resize { cursor: ew-resize; }
 </style>
