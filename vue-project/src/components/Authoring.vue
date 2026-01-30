@@ -35,7 +35,7 @@
 
       <div class="canvas-section">
         <PropertyPanel></PropertyPanel>
-        Canvas
+        <!-- Canvas -->
         <div v-if="selectedShapeIndex != null && allShapes[selectedShapeIndex]" style="padding: 10px;" >
           <h6>Shape Properties</h6>
           <div v-if="allShapes[selectedShapeIndex].type == 'rect'">
@@ -174,13 +174,13 @@ const emit = defineEmits(['itemSelected']);
 onMounted(() => {
   console.log("Authoring component mounted.");
   const sceneStore = useSceneStore();
-  const {scene, selectedItem} = storeToRefs(sceneStore);
+  const {scene, selected} = storeToRefs(sceneStore);
   scene.value.mark("circle", {x: 50, y: 50,
     radius: 50, fillColor: "none"
   });
   sceneStore.renderer.render(sceneStore.scene);
 
-  selectedItem.value = "circle0"
+  // selected.value = "circle0"
 
   // let item = scene.value.getItem("circle0")
   // console.log("scene", item);

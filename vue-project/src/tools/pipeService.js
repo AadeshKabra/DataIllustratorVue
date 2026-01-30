@@ -6,7 +6,7 @@ var pipeService = {
     
     // define event names
     SELECT_READ_CSV: 'csv',
-    SELECT_STATION: 'select_station',
+    ITEM_UPDATED: 'item_updated',
     
     emitReadCSV: function (msg) {
         bus.emit(this.SELECT_READ_CSV, msg)
@@ -17,11 +17,11 @@ var pipeService = {
         })
     },
 
-    emitSelectStation: function (msg) {
-        bus.emit(this.SELECT_STATION, msg)
+    emitItemUpdated: function (msg) {
+        bus.emit(this.ITEM_UPDATED, msg)
     },
-    onSelectStation: function (callback) {
-        bus.on(this.SELECT_STATION, function (msg) {
+    onItemUpdated: function (callback) {
+        bus.on(this.ITEM_UPDATED, function (msg) {
             callback(msg)
         })
     },

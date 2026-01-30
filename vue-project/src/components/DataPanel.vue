@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, nextTick } from 'vue';
 import {useSceneStore} from '../stores/sceneStore.js';
 import { csvFromString } from "mascot-vis";
 // import pipeService from '../tools/pipeService.js';
@@ -66,6 +66,11 @@ function handleFileSelect(event) {
 
     sceneStore.datasets = tbl;
     sceneStore.readCSV = true;
+
+    nextTick(() => {
+      sceneStore.currentDataTable = tbl;
+    })
+
     // console.log("Dataset loaded into sceneStore:", tbl.getUniqueFieldValues(field).length);
   }
 

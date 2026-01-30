@@ -43,7 +43,7 @@
                 </div>
 
                 <div class="modal-body">
-                    <p class="mb-2">{{ repeatNum }} rects will be repeated</p>
+                    <p class="mb-2">{{ repeatNum }} circles will be repeated</p>
 
                       <!-- Selection -->
                     <div class="mb-3">
@@ -84,7 +84,7 @@ const arrangements = ref(["Align Top", "Align Middle", "Align Bottom", "Align Le
 
 const activeTool = ref(null);
 const sceneStore = useSceneStore();
-const {readCSV, datasets, scene} = storeToRefs(sceneStore);
+const {readCSV, datasets, scene, selected} = storeToRefs(sceneStore);
 const modalEl = ref(null);
 let bootstrapModal = null;
 const options = ref(null);
@@ -118,9 +118,8 @@ function closeModal() {
 }
 
 function doRepeat() {
-    console.log('Start repeating shapes based on field: ', selectedField.value);
+
     let item = scene.value.getItem("circle0");
-    console.log("scene", item);
 
     let layout = getDefaultCollectionLayout(item, datasets.value.getUniqueFieldValues(selectedField.value).length);
     let coll = scene.value.repeat(item, datasets.value, {field: selectedField.value, layout: layout});
@@ -135,6 +134,12 @@ function doRepeat() {
     }
     scene.value.reCreateRelatedAxes(coll);
     sceneStore.renderer.render(scene.value);
+
+    // clean then update
+    selected.value = null
+    nextTick(() => {
+        selected.value = ["circle0"];
+    });
 
     closeModal();
 }
